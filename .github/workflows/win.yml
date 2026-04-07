@@ -79,12 +79,16 @@ jobs:
         run: echo "REPO_NAME=${GITHUB_REPOSITORY##*/}" >> $GITHUB_ENV
 
       - name: Clone.
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
-          submodules: recursive
-          token: ${{ github.token }}
-          persist-credentials: false
           path: ${{ env.TBUILD }}\${{ env.REPO_NAME }}
+
+      - name: Fetch Submodules
+        shell: cmd
+        run: |
+          cd ${{ env.TBUILD }}\${{ env.REPO_NAME }}
+          git config --local --remove-section http.https://github.com/ || echo "Ignorando config"
+          git submodule update --init --recursive
 
       - name: First set up.
         shell: bash
