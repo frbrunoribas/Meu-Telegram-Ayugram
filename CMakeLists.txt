@@ -1,4 +1,2 @@
-# Other content above...
-include(cmake/init_target.cmake)
-include(cmake/init_non_host_target.cmake) # added new include for non-host target
-# Other content below...
+include(init_target.cmake)
+include(init_non_host_target.cmake)
