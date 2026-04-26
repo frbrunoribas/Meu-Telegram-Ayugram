@@ -9,10 +9,6 @@ import sys, os, re
 
 sys.dont_write_bytecode = True
 scriptPath = os.path.dirname(os.path.realpath(__file__))
-sys.path.append(scriptPath + '/../cmake')
-import run_cmake
-sys.path.append(scriptPath + '/build')
-import qt_version
 
 executePath = os.getcwd()
 def finish(code):
@@ -23,6 +19,18 @@ def finish(code):
 def error(message):
     print('[ERROR] ' + message)
     finish(1)
+
+# Add cmake path and handle missing run_cmake module gracefully
+cmake_path = scriptPath + '/../cmake'
+sys.path.insert(0, cmake_path)
+
+try:
+    import run_cmake
+except ModuleNotFoundError:
+    error('run_cmake module not found at: ' + cmake_path + '\nExpected location: ' + os.path.join(cmake_path, 'run_cmake.py') + '\nMake sure the cmake directory exists and contains run_cmake.py')
+
+sys.path.append(scriptPath + '/build')
+import qt_version
 
 if sys.platform == 'win32' and 'COMSPEC' not in os.environ:
     error('COMSPEC environment variable is not set.')
